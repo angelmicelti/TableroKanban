@@ -46,23 +46,6 @@
             background-color: #6a737d;
             cursor: not-allowed;
         }
-        .collapsible-section {
-            transition: all 0.3s ease;
-        }
-        .collapsible-content {
-            max-height: 1000px;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        .collapsible-section.collapsed .collapsible-content {
-            max-height: 0;
-        }
-        .collapsible-section.collapsed .toggle-icon {
-            transform: rotate(-90deg);
-        }
-        .toggle-icon {
-            transition: transform 0.3s ease;
-        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen p-6">
@@ -73,148 +56,130 @@
             <p class="text-gray-600">Organiza tus tareas de manera eficiente</p>
         </div>
 
-        <!-- Main container -->
+        <!-- Add Task Form -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-            <!-- Save/Import Tasks Section -->
-            <div class="collapsible-section mb-4">
-                <button class="section-toggle w-full flex justify-between items-center text-left mb-2" onclick="toggleSection('save-import')">
-                    <h3 class="text-sm font-medium text-gray-700">💾 Guardar e Importar Tareas</h3>
-                    <svg class="toggle-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">➕ Agregar Nueva Tarea</h2>
+            <form id="taskForm" class="flex gap-4 mb-4">
+                <input 
+                    type="text" 
+                    id="taskInput" 
+                    placeholder="Escribe tu tarea aquí..." 
+                    class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                >
+                <button 
+                    type="submit" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                >
+                    Agregar Tarea
                 </button>
-                <div id="save-import" class="collapsible-content">
-                    <div class="flex flex-wrap gap-3">
-                        <button 
-                            onclick="exportTasks()" 
-                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
-                        >
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                            </svg>
-                            Descargar Tareas
-                        </button>
-                        
-                        <label class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 11-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Cargar Tareas
-                            <input type="file" id="importFile" accept=".json" class="hidden" onchange="importTasks(event)">
-                        </label>
-                        
-                        <button 
-                            onclick="clearAllTasks()" 
-                            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
-                        >
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd"></path>
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-                            </svg>
-                            Limpiar Todo
-                        </button>
-                    </div>
-                </div>
-            </div>
+            </form>
             
-            <!-- GitHub Gists Section -->
-            <div class="collapsible-section mb-4">
-                <button class="section-toggle w-full flex justify-between items-center text-left mb-2" onclick="toggleSection('github-gists')">
-                    <h3 class="text-sm font-medium text-gray-700">🐙 GitHub Gist (Backup en la nube)</h3>
-                    <svg class="toggle-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </button>
-                <div id="github-gists" class="collapsible-content">
-                    <div class="mb-4">
-                        <div class="flex items-center gap-2 mb-2">
-                            <input 
-                                type="password" 
-                                id="githubToken" 
-                                placeholder="Ingresa tu token de GitHub" 
-                                class="flex-1 px-3 py-2 border border-gray-300 rounded text-sm"
-                            >
-                            <button 
-                                onclick="saveToken()" 
-                                class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded text-sm"
-                            >
-                                Guardar Token
-                            </button>
-                        </div>
-                        <p class="text-xs text-gray-500">
-                            <a href="https://github.com/settings/tokens/new?description=Kanban%20Board&scopes=gist" 
-                               target="_blank" class="text-blue-600 hover:underline">
-                               Crear token aquí
-                            </a> - Solo necesita permiso "gist". El token se guarda localmente en tu navegador.
-                        </p>
-                    </div>
-                    <div class="flex flex-wrap gap-3">
-                        <button 
-                            id="githubSaveBtn"
-                            class="github-btn px-4 py-2 rounded-lg font-medium flex items-center gap-2"
-                        >
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-                            </svg>
-                            Guardar en Gist
-                        </button>
-                        
-                        <button 
-                            id="githubLoadBtn"
-                            class="github-btn px-4 py-2 rounded-lg font-medium flex items-center gap-2"
-                        >
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-                            </svg>
-                            Cargar desde Gist
-                        </button>
-                        
-                        <button 
-                            id="githubListBtn"
-                            class="github-btn px-4 py-2 rounded-lg font-medium flex items-center gap-2"
-                        >
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M3.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2 3.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0zm.5 5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm0 4.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM8 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM6.5 3.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0zm1.5 7.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm0 4.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM12 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-1.5 1.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0zm1.5 7.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm0 4.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
-                            </svg>
-                            Ver Gists
-                        </button>
-                        
-                        <button 
-                            onclick="clearGitHubToken()" 
-                            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2"
-                        >
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                            </svg>
-                            Borrar Token
-                        </button>
-                    </div>
-                    <div id="githubStatus" class="text-sm text-gray-600 mt-2"></div>
-                </div>
-            </div>
-            
-            <!-- Add Task Form -->
-            <div>
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">➕ Agregar Nueva Tarea</h2>
-                <form id="taskForm" class="flex gap-4 mb-4">
-                    <input 
-                        type="text" 
-                        id="taskInput" 
-                        placeholder="Escribe tu tarea aquí..." 
-                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                    >
+            <!-- Import/Export Controls -->
+            <div class="border-t pt-4">
+                <h3 class="text-sm font-medium text-gray-700 mb-3">💾 Guardar e Importar Tareas</h3>
+                <div class="flex flex-wrap gap-3">
                     <button 
-                        type="submit" 
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                        onclick="exportTasks()" 
+                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
                     >
-                        Agregar Tarea
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                        Descargar Tareas
                     </button>
-                </form>
+                    
+                    <label class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 11-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        Cargar Tareas
+                        <input type="file" id="importFile" accept=".json" class="hidden" onchange="importTasks(event)">
+                    </label>
+                    
+                    <button 
+                        onclick="clearAllTasks()" 
+                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
+                    >
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd"></path>
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                        </svg>
+                        Limpiar Todo
+                    </button>
+                </div>
+            </div>
+            
+            <!-- GitHub Gists Integration -->
+            <div class="border-t pt-4 mt-4">
+                <h3 class="text-sm font-medium text-gray-700 mb-3">🐙 GitHub Gist (Backup en la nube)</h3>
+                <div class="mb-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <input 
+                            type="password" 
+                            id="githubToken" 
+                            placeholder="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" 
+                            class="flex-1 px-3 py-2 border border-gray-300 rounded text-sm"
+                        >
+                        <button 
+                            onclick="saveToken()" 
+                            class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded text-sm"
+                        >
+                            Guardar Token
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500">
+                        <a href="https://github.com/settings/tokens/new?description=Kanban%20Board&scopes=gist" 
+                           target="_blank" class="text-blue-600 hover:underline">
+                           Crear token aquí
+                        </a> - Solo necesita permiso "gist". El token se guarda localmente en tu navegador.
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <button 
+                        id="githubSaveBtn"
+                        class="github-btn px-4 py-2 rounded-lg font-medium flex items-center gap-2"
+                    >
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                        </svg>
+                        Guardar en Gist
+                    </button>
+                    
+                    <button 
+                        id="githubLoadBtn"
+                        class="github-btn px-4 py-2 rounded-lg font-medium flex items-center gap-2"
+                    >
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                        </svg>
+                        Cargar desde Gist
+                    </button>
+                    
+                    <button 
+                        id="githubListBtn"
+                        class="github-btn px-4 py-2 rounded-lg font-medium flex items-center gap-2"
+                    >
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M3.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM2 3.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0zm.5 5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm0 4.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM8 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM6.5 3.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0zm1.5 7.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm0 4.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM12 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-1.5 1.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0zm1.5 7.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm0 4.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                        </svg>
+                        Ver Gists
+                    </button>
+                    
+                    <button 
+                        onclick="clearGitHubToken()" 
+                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2"
+                    >
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                        Borrar Token
+                    </button>
+                </div>
+                <div id="githubStatus" class="text-sm text-gray-600 mt-2"></div>
             </div>
         </div>
 
-        <!-- Resto del código permanece igual -->
         <!-- Kanban Board -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- No Iniciado Column -->
@@ -292,14 +257,6 @@
     </div>
 
     <script>
-        // Función para alternar la visibilidad de las secciones
-        function toggleSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            const parent = section.closest('.collapsible-section');
-            parent.classList.toggle('collapsed');
-        }
-
-        // El resto del código JavaScript permanece igual
         let taskCounter = 0;
         let tasks = [];
         let githubToken = localStorage.getItem('githubToken') || '';
