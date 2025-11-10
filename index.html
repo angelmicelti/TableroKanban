@@ -1,6 +1,41 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+	<!-- PWA Meta Tags -->
+	<meta name="application-name" content="Tablero Kanban">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="apple-mobile-web-app-title" content="Kanban">
+	<meta name="description" content="Organiza tus tareas de manera eficiente">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="msapplication-config" content="none">
+	<meta name="msapplication-TileColor" content="#3b82f6">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="theme-color" content="#3b82f6">
+
+	<!-- Apple Touch Icons -->
+	<link rel="apple-touch-icon" href="icons/icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192x192.png">
+	<link rel="apple-touch-icon" sizes="167x167" href="icons/icon-152x152.png">
+
+	<!-- Safari Pinned Tab -->
+	<link rel="mask-icon" href="icons/icon-192x192.png" color="#3b82f6">
+
+	<!-- Manifest -->
+	<link rel="manifest" href="manifest.json">
+
+	<!-- iOS Splash Screens -->
+	<link rel="apple-touch-startup-image" href="splash/splash-640x1136.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+	<link rel="apple-touch-startup-image" href="splash/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+	<link rel="apple-touch-startup-image" href="splash/splash-828x1792.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+	<link rel="apple-touch-startup-image" href="splash/splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+	<link rel="apple-touch-startup-image" href="splash/splash-1242x2208.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+	<link rel="apple-touch-startup-image" href="splash/splash-1242x2688.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+	<link rel="apple-touch-startup-image" href="splash/splash-1536x2048.png" media="(min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)">
+	<link rel="apple-touch-startup-image" href="splash/splash-1668x2224.png" media="(min-device-width: 834px) and (max-device-width: 834px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tablero Kanban</title>
@@ -940,5 +975,82 @@
             initGitHubIntegration();
         });
     </script>
+	<script>
+  // PWA Installation
+  let deferredPrompt;
+  const installButton = document.createElement('button');
+  
+  // Crear botón de instalación
+  function createInstallButton() {
+    installButton.innerHTML = '📱 Instalar App';
+    installButton.className = 'fixed bottom-4 right-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg z-40 flex items-center gap-2';
+    installButton.style.display = 'none';
+    installButton.onclick = installPWA;
+    document.body.appendChild(installButton);
+  }
+  
+  // Mostrar botón de instalación cuando sea posible
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installButton.style.display = 'flex';
+    
+    // Ocultar automáticamente después de 10 segundos
+    setTimeout(() => {
+      installButton.style.display = 'none';
+    }, 10000);
+  });
+  
+  // Instalar PWA
+  async function installPWA() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      
+      if (outcome === 'accepted') {
+        installButton.style.display = 'none';
+        showMessage('✅ App instalada correctamente', 'success');
+      }
+      
+      deferredPrompt = null;
+    }
+  }
+  
+  // Ocultar botón después de instalación
+  window.addEventListener('appinstalled', () => {
+    installButton.style.display = 'none';
+    deferredPrompt = null;
+  });
+  
+  // Registrar Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('sw.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registrado con éxito: ', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('Error al registrar ServiceWorker: ', error);
+        });
+    });
+  }
+  
+  // Detectar si es PWA
+  function isRunningAsPWA() {
+    return window.matchMedia('(display-mode: standalone)').matches || 
+           window.navigator.standalone === true;
+  }
+  
+  // Mejorar comportamiento en iOS
+  if (isRunningAsPWA()) {
+    document.documentElement.style.setProperty('--sat', 'env(safe-area-inset-top)');
+    document.documentElement.style.setProperty('--sab', 'env(safe-area-inset-bottom)');
+    document.documentElement.style.setProperty('--sal', 'env(safe-area-inset-left)');
+    document.documentElement.style.setProperty('--sar', 'env(safe-area-inset-right)');
+  }
+  
+  // Crear botón de instalación al cargar
+  window.addEventListener('DOMContentLoaded', createInstallButton);
+</script>
 </body>
 </html>
