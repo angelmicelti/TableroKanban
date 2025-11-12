@@ -2,7 +2,7 @@
   "name": "Tablero Kanban",
   "short_name": "Kanban",
   "description": "Organiza tus tareas de manera eficiente con un tablero Kanban",
-  "start_url": "/TableroKanban/",
+  "start_url": "./TableroKanban/index.html",
   "display": "standalone",
   "background_color": "#3b82f6",
   "theme_color": "#3b82f6",
