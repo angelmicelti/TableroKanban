@@ -1,11 +1,12 @@
-const CACHE_NAME = 'kanban-v2.0';
+// sw.js CORREGIDO
+const CACHE_NAME = 'kanban-v2.1';
 const urlsToCache = [
-  './',
+  '/',
+  '/index.html',
   './index.html',
   'https://cdn.tailwindcss.com'
 ];
 
-// Instalar Service Worker
 self.addEventListener('install', event => {
   console.log('Service Worker instalándose...');
   event.waitUntil(
@@ -14,10 +15,13 @@ self.addEventListener('install', event => {
         console.log('Cache abierto');
         return cache.addAll(urlsToCache);
       })
+      .catch(error => {
+        console.log('Error al cachear:', error);
+      })
   );
+  self.skipWaiting(); // ✅ FORZAR ACTIVACIÓN INMEDIATA
 });
 
-// Activar Service Worker
 self.addEventListener('activate', event => {
   console.log('Service Worker activado');
   event.waitUntil(
@@ -32,44 +36,38 @@ self.addEventListener('activate', event => {
       );
     })
   );
+  return self.clients.claim(); // ✅ RECLAMAR CONTROL INMEDIATO
 });
 
-// Interceptar solicitudes
 self.addEventListener('fetch', event => {
+  // ✅ ESTRATEGIA CACHE FIRST CON FALLBACK A NETWORK
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Cache hit - return response
         if (response) {
           return response;
         }
+        
+        return fetch(event.request)
+          .then(response => {
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
 
-        // Clonar la solicitud
-        const fetchRequest = event.request.clone();
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME)
+              .then(cache => {
+                cache.put(event.request, responseToCache);
+              });
 
-        return fetch(fetchRequest).then(response => {
-          // Verificar si la respuesta es válida
-          if (!response || response.status !== 200 || response.type !== 'basic') {
             return response;
-          }
-
-          // Clonar la respuesta
-          const responseToCache = response.clone();
-
-          caches.open(CACHE_NAME)
-            .then(cache => {
-              cache.put(event.request, responseToCache);
-            });
-
-          return response;
-        });
+          })
+          .catch(() => {
+            // ✅ EN CASO DE ERROR, INTENTAR SERVIR INDEX.HTML PARA RUTAS
+            if (event.request.mode === 'navigate') {
+              return caches.match('./index.html');
+            }
+          });
       })
-    );
-});
-
-// Manejar mensajes desde la app
-self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
+  );
 });
