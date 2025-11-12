@@ -2,12 +2,12 @@
   "name": "Tablero Kanban",
   "short_name": "Kanban",
   "description": "Organiza tus tareas de manera eficiente con un tablero Kanban",
-  "start_url": "./TableroKanban/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#3b82f6",
   "theme_color": "#3b82f6",
   "orientation": "any",
-  "scope": "/TableroKanban/",
+  "scope": "./",
   "lang": "es",
   "categories": ["productivity", "utilities"],
   "icons": [
@@ -58,38 +58,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    }
-	
-	{
-      "src": "icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "icons/icon-512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-	
-  ],
-  "screenshots": [
-    {
-      "src": "screenshots/mobile.png",
-      "sizes": "375x667",
-      "type": "image/png",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "screenshots/desktop.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide"
     }
   ]
 }
